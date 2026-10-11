@@ -755,6 +755,10 @@ h2 {
   font-size: 10px;
 }
 
+.print-heading {
+  display: none;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -920,26 +924,80 @@ h2 {
 }
 
 @media print {
+  @page {
+    margin: 14mm;
+  }
+
   body {
     background: #fff;
+    color: #202923;
   }
 
   .app-shell {
     width: 100%;
+    margin: 0;
   }
 
-  .topbar-right,
-  .button,
+  .app-shell > :not(#print-budget) {
+    display: none !important;
+  }
+
+  #print-budget {
+    display: block;
+  }
+
+  .print-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d9ded7;
+  }
+
+  .print-heading h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .print-heading > span {
+    color: #687269;
+    font-size: 12px;
+  }
+
+  .panel-heading .button,
   .remove-btn,
   .panel-footer,
-  .text-button {
+  .text-button,
+  .empty-state {
     display: none !important;
   }
 
   .panel,
   .summary-card {
     break-inside: avoid;
+    border-color: #e4e8e2;
     box-shadow: none;
+  }
+
+  .expense-row input,
+  .expense-row select,
+  .amount-input-wrap,
+  .goal-money input {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .expense-row input,
+  .expense-row select,
+  .goal-money input {
+    color: #202923;
+    appearance: none;
+  }
+
+  .amount-input-wrap {
+    padding-left: 9px;
   }
 
   .dashboard-grid {

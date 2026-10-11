@@ -15,7 +15,7 @@
         <span>budgetly<span class="brand-dot">.</span></span>
       </a>
       <div class="topbar-right">
-        <span class="save-status"><span class="status-dot"></span>Saved on this device</span>
+        <span class="save-status"><span class="status-dot"></span>Fresh budget</span>
         <button class="button button-outline" id="print-btn" type="button">Print budget</button>
       </div>
     </header>
@@ -32,12 +32,17 @@
       </label>
     </section>
 
+    <section id="print-budget">
+      <div class="print-heading">
+        <h1>Monthly budget</h1>
+        <span id="print-month"></span>
+      </div>
     <section class="summary-grid" aria-label="Budget summary">
       <article class="summary-card income-card">
         <div class="summary-label"><span class="summary-icon income-icon" aria-hidden="true">↗</span>Monthly income</div>
         <label class="money-input-wrap" for="monthly-income">
           <span>K</span>
-          <input id="monthly-income" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal" aria-label="Monthly income in kwacha">
+          <input id="monthly-income" type="number" min="0" step="0.01" value="0" inputmode="decimal" aria-label="Monthly income in kwacha">
         </label>
         <p class="card-hint">Your take-home income for this month</p>
       </article>
@@ -82,7 +87,7 @@
           <strong id="panel-total">K0.00</strong>
         </div>
         <div class="panel-footer">
-          <span><span class="status-dot"></span> Your budget is saved automatically</span>
+          <span><span class="status-dot"></span> This plan resets when you reload the page</span>
           <button class="text-button export-button" id="export-btn" type="button">Export CSV <span aria-hidden="true">↗</span></button>
         </div>
       </section>
@@ -116,7 +121,7 @@
           <p class="section-copy">Set a target and see how your plan stacks up.</p>
           <label class="goal-input-wrap" for="savings-goal">
             <span>Target</span>
-            <span class="goal-money"><span>K</span><input id="savings-goal" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal" aria-label="Monthly savings goal in kwacha"></span>
+            <span class="goal-money"><span>K</span><input id="savings-goal" type="number" min="0" step="0.01" value="0" inputmode="decimal" aria-label="Monthly savings goal in kwacha"></span>
           </label>
           <div class="progress-track" role="progressbar" id="goal-progress" aria-label="Savings goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <span id="goal-progress-fill"></span>
@@ -125,6 +130,7 @@
         </section>
       </aside>
     </div>
+    </section>
 
     <footer class="app-footer">
       <span>Small steps today. More possibilities tomorrow.</span>
@@ -147,8 +153,8 @@
         <option value="Education">Education</option>
         <option value="Other">Other</option>
       </select>
-      <label class="visually-hidden amount-label">Samuel Creations</label>
-      <div class="amount-input-wrap"><span>K</span><input class="expense-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal"></div>
+      <label class="visually-hidden amount-label">Planned amount in kwacha</label>
+      <div class="amount-input-wrap"><span>K</span><input class="expense-amount" type="number" min="0" step="0.01" value="0" inputmode="decimal"></div>
       <button class="remove-btn" type="button" aria-label="Remove expense">×</button>
     </div>
   </template>

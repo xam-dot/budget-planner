@@ -1,4 +1,3 @@
-const STORAGE_KEY = "budgetly-monthly-plan";
 const categoryColors = {
   Housing: "#527d5e",
   Food: "#d99c52",
@@ -15,6 +14,7 @@ const rowTemplate = document.getElementById("expense-row-template");
 const incomeInput = document.getElementById("monthly-income");
 const goalInput = document.getElementById("savings-goal");
 const monthInput = document.getElementById("budget-month");
+const printMonth = document.getElementById("print-month");
 const expenseCount = document.getElementById("expense-count");
 const expenseTotal = document.getElementById("planned-expenses");
 const panelTotal = document.getElementById("panel-total");
@@ -36,23 +36,6 @@ function currentMonth() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }
 
-function readPlan() {
-  try {
-    const savedPlan = localStorage.getItem(STORAGE_KEY);
-    if (!savedPlan) {
-      return null;
-    }
-    const plan = JSON.parse(savedPlan);
-    if (!plan || typeof plan !== "object" || !Array.isArray(plan.expenses)) {
-      throw new Error("Saved budget data has an invalid format.");
-    }
-    return plan;
-  } catch (error) {
-    console.error("Unable to load the saved budget plan.", error);
-    return null;
-  }
-}
-
 function amountValue(input) {
   const amount = Number(input.value);
   return Number.isFinite(amount) && amount > 0 ? amount : 0;
@@ -65,7 +48,7 @@ function formatMoney(amount) {
   })}`;
 }
 
-function addExpenseRow(expense = {}) {
+function addExpenseRow() {
   const fragment = rowTemplate.content.cloneNode(true);
   const row = fragment.querySelector(".expense-row");
   const nameInput = row.querySelector(".expense-name");
@@ -80,13 +63,9 @@ function addExpenseRow(expense = {}) {
   amountInput.id = `expense-amount-${id}`;
   row.querySelector(".amount-label").htmlFor = amountInput.id;
 
-  nameInput.value = typeof expense.name === "string" ? expense.name : "";
-  categorySelect.value = [...categorySelect.options].some(option => option.value === expense.category)
-    ? expense.category
-    : "Other";
-  amountInput.value = Number.isFinite(Number(expense.amount)) && Number(expense.amount) > 0
-    ? Number(expense.amount)
-    : "";
+  nameInput.value = "";
+  categorySelect.value = "Housing";
+  amountInput.value = "0";
 
   expenseList.appendChild(fragment);
 }
@@ -104,17 +83,6 @@ function collectPlan() {
     goal: amountValue(goalInput),
     expenses
   };
-}
-
-function savePlan() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectPlan()));
-  } catch (error) {
-    console.error("Unable to save the budget plan on this device.", error);
-    const saveStatus = document.querySelector(".save-status");
-    saveStatus.textContent = "Couldn't save on this device";
-    saveStatus.setAttribute("role", "status");
-  }
 }
 
 function updateBreakdown(expenses, total) {
@@ -205,7 +173,17 @@ function updateDashboard() {
 
 function refreshPlan() {
   updateDashboard();
-  savePlan();
+  updatePrintMonth();
+}
+
+function updatePrintMonth() {
+  const [year, month] = monthInput.value.split("-").map(Number);
+  if (year && month) {
+    printMonth.textContent = new Date(year, month - 1).toLocaleDateString("en", {
+      month: "long",
+      year: "numeric"
+    });
+  }
 }
 
 function downloadCsv() {
@@ -257,11 +235,8 @@ monthInput.addEventListener("input", refreshPlan);
 document.getElementById("export-btn").addEventListener("click", downloadCsv);
 document.getElementById("print-btn").addEventListener("click", () => window.print());
 
-const savedPlan = readPlan();
-monthInput.value = savedPlan?.month || currentMonth();
-incomeInput.value = Number(savedPlan?.income) > 0 ? savedPlan.income : "";
-goalInput.value = Number(savedPlan?.goal) > 0 ? savedPlan.goal : "";
-if (savedPlan) {
-  savedPlan.expenses.forEach(expense => addExpenseRow(expense));
-}
+monthInput.value = currentMonth();
+incomeInput.value = "0";
+goalInput.value = "0";
 updateDashboard();
+updatePrintMonth();
